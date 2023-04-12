@@ -11,8 +11,13 @@ fn main() {
     a.copy_from(unsafe { std::slice::from_raw_parts(buffer.as_ptr() as *const f32, 1024) });
     let shape = a.shape().concrete();
 
-    let x = (a.clone() - a.mean().broadcast()).square();
+    let x = (a.clone() - a.clone().mean().broadcast()).square();
     let std = sqrt(x.mean());
 
-    println!("{:?} {:.17?}", shape, std.array());
+    println!("f32 {:?} {:.17?}", shape, std.array());
+
+
+    let std_f64 = a.to_dtype::<f64>().stddev(0.0);
+    println!("f64 {:?} {:.17?}", shape, std_f64.array());
+
 }
